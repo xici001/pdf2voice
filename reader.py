@@ -110,17 +110,6 @@ def looks_like_cover(lines: list[str]) -> bool:
     return False
 
 
-def detect_noisy_pages(raw: dict) -> set:
-    """启发式找封面/扉页：中文极少且无连续句子的页。"""
-    noisy = set()
-    for i, t in raw.items():
-        cjk = len(re.findall(r"[\u4e00-\u9fff]", t))
-        sentences = re.findall(r"[\u4e00-\u9fff]{6,}[。！？…]", t)
-        if cjk < 40 and len(sentences) == 0:
-            noisy.add(i)
-    return noisy
-
-
 def detect_noisy_lines(raw: dict) -> set:
     """出现在 >=30% 页面同一位置的短行 => 页眉/页脚/丛书名。"""
     from collections import Counter

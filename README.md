@@ -3,7 +3,34 @@
 > 数字管道的建筑师 · 第五块积木：把 PDF 电子书自动转成语音有声书
 > 前四块：workflow-templates / digital-twin-mcp / factory-twin-viz / workflow-mcp
 
-把 PDF 电子书自动转成语音 MP3，用微软 Edge TTS（免费、中文自然度最高）。
+**PDF 电子书 → 语音 MP3**：免费、中文自然度最高（微软 Edge TTS），扫描版自动 OCR，通勤路上"听"书。
+
+## 为什么用它（对比）
+
+| | **pdf2voice** | pdf-narrator | Calibre TTS 插件 | 浏览器朗读 |
+|---|---|---|---|---|
+| 中文扫描版 PDF | ✅ 自动 OCR | 需自配 | ❌ | ❌ |
+| 中文噪音过滤（页眉/页脚/封面/版权页） | ✅ 内置启发式 | 部分 | ❌ | ❌ |
+| 费用 | 免费（Edge TTS） | 免费 | 免费 | 免费 |
+| 批量转换 | ✅ Web 勾选多本排队 | ❌ | 单本 | ❌ |
+| 分页/换音色/调速 | ✅ 全部支持 | 部分 | 部分 | 有限 |
+| 免装运行 | ✅ Windows exe | 需 Python 环境 | 需装 Calibre | 仅浏览器 |
+
+一句话：**给中文 PDF 电子书（尤其扫描版）做免费有声书，这是最顺手的工具。**
+
+## MCP 接入（AI 客户端可直接调用）
+
+本项目同时是一个 MCP Server（`mcp_server.py`），WorkBuddy / Claude Desktop 等客户端可直接把"PDF 转语音"当工具用：
+
+| 工具 | 说明 |
+|------|------|
+| `list_books` | 列出 books/ 下的 PDF |
+| `convert_pdf_to_audio_async` | 异步转换（立即返回 task_id，后台执行） |
+| `get_task_status` | 轮询任务状态（running / done / error） |
+| `list_audio_outputs` | 列出已生成的有声书 |
+
+> 长任务必须用异步模式：整本书合成可能数分钟，同步调用会触发客户端请求超时。
+> WorkBuddy 接入：把 `pdf2voice-mcp` 合并进 `~/.workbuddy/mcp.json` 后在连接器管理页「信任」。
 
 ## 使用
 
