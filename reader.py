@@ -21,6 +21,13 @@ import fitz  # pymupdf
 DEFAULT_VOICE = "zh-CN-XiaoxiaoNeural"   # 晓晓女声，自然度高
 CHUNK_LIMIT = 1800                        # 每段合成文本上限（edge-tts 稳定值）
 
+
+def base_dir() -> Path:
+    """运行基准目录：PyInstaller exe 用 exe 所在目录，源码运行用项目目录。"""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    return Path(__file__).resolve().parent
+
 # 常用中文音色备选:
 #   zh-CN-XiaoxiaoNeural  女声（默认）
 #   zh-CN-YunxiNeural     男声（年轻）
@@ -212,7 +219,18 @@ async def synth(chunks: list[str], voice: str, rate: str, pitch: str,
     print(f"\r✅ 完成 {total} 段 -> {out_path.name} ({size_mb:.1f} MB)")
 
 
+def ensure_utf8_console() -> None:
+    """Windows 控制台默认 GBK，emoji 会编码崩溃；统一转 UTF-8（失败则忽略）。"""
+    for stream in (sys.stdout, sys.stderr):
+        if stream and hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def main():
+    ensure_utf8_console()
     ap = argparse.ArgumentParser(description="PDF 电子书 -> 语音朗读")
     ap.add_argument("pdf", type=Path, help="PDF 文件路径")
     ap.add_argument("-o", "--output", type=Path, default=None,
@@ -235,7 +253,7 @@ def main():
     n_chars = len(full_text)
     print(f"📖 《{pdf.stem}》 共提取 {len(pages_data)} 页 / {n_chars} 字")
 
-    base_out = args.output or Path(__file__).parent / "output" / f"{pdf.stem}.mp3"
+    base_out = args.output or base_dir() / "output" / f"{pdf.stem}.mp3"
     base_out.parent.mkdir(parents=True, exist_ok=True)
 
     chunks = chunk_text(full_text)

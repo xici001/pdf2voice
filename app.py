@@ -10,7 +10,7 @@ from pathlib import Path
 from flask import Flask, jsonify, request, send_file, render_template_string
 import reader  # PDF 文本提取 / 分块 / OCR（reader.py 与本文件同目录）
 
-BASE = Path(__file__).parent
+BASE = reader.base_dir()   # exe 模式下为 exe 所在目录，保证 books/output 落盘在用户看得见的地方
 BOOKS_DIR = BASE / "books"
 OUT_DIR = BASE / "output"
 BOOKS_DIR.mkdir(exist_ok=True)

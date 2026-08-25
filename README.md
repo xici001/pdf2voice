@@ -52,6 +52,16 @@
 | zh-CN-YunjianNeural | 云健男声（沉稳） |
 | zh-CN-XiaoyiNeural | 晓伊女声（温柔） |
 
+## 直接下载 exe（免装环境）
+
+Windows 用户可到 **Releases** 页下载 `pdf2voice.exe`（已内置 Python 与全部依赖，免安装）：
+
+- 双击 `pdf2voice.exe` → 启动 Web 界面（http://localhost:8765）
+- 把 PDF 拖到 `pdf2voice.exe` 上（或命令行 `pdf2voice.exe 书.pdf`）→ 直接命令行转换
+
+> 内置 OCR（扫描版识别）模型，单个 exe 体积较大属正常。需联网调用微软 Edge TTS。
+> 自己打包：`pip install pyinstaller && pyinstaller --onefile --collect-data rapidocr_onnxruntime launcher.py`
+
 ## 依赖
 
 ```bash
