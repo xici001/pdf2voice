@@ -1,0 +1,17 @@
+# 虚拟环境与缓存
+.venv/
+__pycache__/
+*.pyc
+
+# 书库：PDF 版权文件一律不入库（保留测试样本）
+books/*.pdf
+!books/测试书.pdf
+
+# 输出：生成的有声书
+output/
+*.mp3
+*.parts
+
+# 系统文件
+.DS_Store
+Thumbs.db
